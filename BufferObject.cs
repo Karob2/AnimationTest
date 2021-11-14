@@ -1,4 +1,5 @@
 ﻿using Silk.NET.OpenGL;
+using System;
 
 namespace AnimationTest
 {

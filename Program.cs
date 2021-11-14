@@ -102,7 +102,9 @@ namespace AnimationTest
         {
             if (SilkWindow == null || GL == null || MainCamera == null || SilkInput == null) return;
 
-            if (SilkInput.Keyboards.First().IsKeyPressed(Key.Escape))
+            var keyboard = SilkInput.Keyboards[0];
+
+            if (keyboard.IsKeyPressed(Key.Escape))
             {
                 if(!LastCursorLockPressedState) ToggleCursorLock();
                 LastCursorLockPressedState = true;
@@ -111,19 +113,19 @@ namespace AnimationTest
 
             var moveSpeed = 25f * (float)delta;
 
-            if (SilkInput.Keyboards.First().IsKeyPressed(Key.W))
+            if (keyboard.IsKeyPressed(Key.W))
             {
                 MainCamera.Position += moveSpeed * MainCamera.Front;
             }
-            if (SilkInput.Keyboards.First().IsKeyPressed(Key.S))
+            if (keyboard.IsKeyPressed(Key.S))
             {
                 MainCamera.Position -= moveSpeed * MainCamera.Front;
             }
-            if (SilkInput.Keyboards.First().IsKeyPressed(Key.A))
+            if (keyboard.IsKeyPressed(Key.A))
             {
                 MainCamera.Position -= Vector3.Normalize(Vector3.Cross(MainCamera.Front, MainCamera.Up)) * moveSpeed;
             }
-            if (SilkInput.Keyboards.First().IsKeyPressed(Key.D))
+            if (keyboard.IsKeyPressed(Key.D))
             {
                 MainCamera.Position += Vector3.Normalize(Vector3.Cross(MainCamera.Front, MainCamera.Up)) * moveSpeed;
             }

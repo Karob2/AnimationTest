@@ -105,7 +105,10 @@ namespace AnimationTest
                 {
                     if (b.IsBone && b.BoneIndex.HasValue && b.BoneOffset.HasValue)
                     {
-                        Program.SkeletonShader?.SetUniform("uBones[" + b.BoneIndex + "]", GlobalInverseTransform * b.WorldSpaceTransform * b.BoneOffset.Value);
+                        Program.SkeletonShader?.SetUniform("uBones[" + b.BoneIndex + "]", b.WorldSpaceTransform * GlobalInverseTransform);
+                        //This also works:
+                        //Matrix4x4.Invert(b.BoneOffset.Value, out var boneInvert);
+                        //Program.SkeletonShader?.SetUniform("uBones[" + b.BoneIndex + "]", boneInvert * GlobalInverseTransform);
                     }
                 }
                 SkeletalVAO?.Draw(delta);//, 3);
@@ -118,7 +121,7 @@ namespace AnimationTest
         {
             if (!Initialized || Scene == null) return;
             bool hasBone = bones.ContainsKey(node.Name);
-            Matrix4x4 thisTransform = parentTransform * ToMatrix4x4(node.Transform); //convert the mesh transform to model transform
+            Matrix4x4 thisTransform = ToMatrix4x4(node.Transform) * parentTransform; //convert the mesh transform to model transform
             Node n = new Node() { Name = node.Name, Parent = parent, WorldSpaceTransform = thisTransform, IsBone = hasBone, ParentBone = parentBone };
             if (hasBone)
             {
@@ -130,6 +133,8 @@ namespace AnimationTest
                 {
                     GlobalInverseTransform = n.WorldSpaceTransform;
                     Matrix4x4.Invert(GlobalInverseTransform, out GlobalInverseTransform);
+                    //This also works:
+                    //GlobalInverseTransform = n.BoneOffset.Value;
                 }
             }
             Console.WriteLine(new string(' ', indent) + "Loaded node: " + node.Name + (hasBone ? " (bone: " + n.BoneIndex + ")" : "") + " [Parent node: " + parent?.Name + "]");
